@@ -1,0 +1,8 @@
+1,drink,20,5
+2,bread,10,20
+3,laptop,1000,10
+4,juice,50,100
+5,television,2000,20
+6,milk,20,50
+8,xienban,5,200
+9,duahau,60,30

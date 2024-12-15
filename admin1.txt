@@ -1,0 +1,2 @@
+200,50% off on food,50,2
+100,50% off on fruit,50,4
