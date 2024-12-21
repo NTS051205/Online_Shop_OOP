@@ -15,8 +15,10 @@ Administrators have access to advanced features for managing the platform, such 
 - **Edit Product:** Modify details of existing products, including price and stock levels.
 - **Delete Product:** Remove a product from the inventory.
 - **View Products:** Display all available products with their details.
-- **Add Promotion:** Create and apply discounts to specific products.
-- **View Promotions:** List all current promotions and their applicable products.
+- **Add Promotion:** Create and apply discounts to specific products. The system also displays the current product list and promotions for reference.
+- **Edit Promotions:** Modify existing promotions, including updating the description and discount percentage.
+- **Delete Promotions:** Remove promotions no longer needed.
+- **View Promotions:** Display all current promotions and their applicable products.
 - **Manage Users:**
   - View registered users.
   - Edit user details (e.g., reset passwords).
@@ -34,7 +36,7 @@ Customers can interact with products and manage their orders through:
 - **View Cart:** Display all items in the cart with quantities and prices.
 - **Checkout:** Purchase items in the cart, reducing inventory stock.
 - **View Order History:** Review details of previous purchases.
-- **Leave a Review:** Provide a rating for purchased products.
+- **Leave a Review:** Provide a rating for purchased products. The program now displays a list of all available products for customers to select when leaving a review.
 
 ### **3. Login and Registration**
 - **Registration:** Allows new users to create an account by entering a username and password.
@@ -45,13 +47,17 @@ Customers can interact with products and manage their orders through:
 ## Recent Updates
 
 ### **Stock Management in Checkout**
-- The program now ensures that product stock is updated after a successful checkout.
+- The program ensures that product stock is updated after a successful checkout.
 - During checkout, if the quantity purchased exceeds available stock, an error message is displayed, and the checkout process is halted for that product.
 - Inventory changes are saved back to the file to ensure data persistence.
 
 ### **Enhanced Order Processing**
 - Administrators can now view detailed order summaries and update order statuses to reflect current progress.
 - Orders are stored in a structured format for easy retrieval and updates.
+
+### **Promotion Management**
+- The program now includes options to edit and delete promotions.
+- When creating or editing promotions, the system displays all products and current promotions for reference.
 
 ---
 
@@ -115,12 +121,19 @@ Password: ****
 ...
 Enter your choice: 1
 
---- Add Product ---
-Enter Product ID: 101
-Enter Product Name: Laptop
-Enter Product Price: 1000.99
-Enter Stock Quantity: 50
-Product added successfully!
+--- Current Products ---
+ID: 101 | Name: Laptop | Price: 1000.99 | Stock: 50
+ID: 102 | Name: Phone  | Price: 599.99  | Stock: 100
+
+--- Current Promotions ---
+Promotion ID: 1 | Description: Winter Sale | Discount: 10%
+
+--- Add Promotion ---
+Enter Promotion ID: 2
+Enter Description: New Year Discount
+Enter Discount Percentage: 15
+Enter Product ID to Apply Promotion: 101
+Promotion added successfully!
 ```
 
 ### Customer Interaction
