@@ -141,20 +141,51 @@ Promotion added successfully!
 --- Customer Menu ---
 1. View Products
 2. Add to Cart
-...
-Enter your choice: 2
+3. Remove from Cart
+4. View Cart
+5. Checkout
+6. View Order History
+7. Leave a Review
+8. Exit
+Enter your choice: 1
 
---- Add to Cart ---
-Enter Product ID: 101
-Enter Quantity: 2
-Product added to cart.
+--- Available Products ---
+ID: 101 | Name: Laptop | Price: 1000.99 | Stock: 50
+ID: 102 | Name: Phone  | Price: 599.99  | Stock: 100
+
+--- Customer Menu ---
+Enter your choice: 7
+
+--- Available Products ---
+Product ID: 101 | Name: Laptop | Price: 1000.99 | Stock: 50
+Product ID: 102 | Name: Phone  | Price: 599.99 | Stock: 100
+
+--- Leave a Review ---
+Enter Product ID to Review: 101
+Enter Rating (1-5): 5
+Review added successfully!
 ```
 
 ### Checkout with Stock Update
 ```plaintext
+--- Current Cart Items ---
+Product: Laptop | Quantity: 2 | Price: 1000.99
+Product: Phone  | Quantity: 1 | Price: 599.99
+
 --- Checkout ---
+Total Amount: 2601.97
+
+Enter Phone Number: 0123456789
+Enter Shipping Address: 123 Main Street
+
+Confirm Checkout? (y/n): y
+
+--- Order Summary ---
 Product: Laptop | Quantity: 2 | Stock Remaining: 48
+Product: Phone  | Quantity: 1 | Stock Remaining: 99
+
 Checkout successful!
+
 ```
 
 ---
