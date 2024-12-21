@@ -4,9 +4,10 @@
 #include <fstream>
 #include <algorithm>
 #include <unordered_map>
-
+#include <unordered_set>
 
 using namespace std;
+
 class Entity {
 protected:
     int id;
@@ -44,6 +45,7 @@ public:
     void displayReviews() const {
         if (reviews.empty()) {
             cout << "No reviews yet.\n";
+        
         } else {
             cout << "\n--- Reviews for " << name << " ---\n";
             for (const auto& review : reviews) {
@@ -61,6 +63,7 @@ public:
         return os;
     }
 };
+
 class Promotion {
 private:
     int promotionId;
@@ -84,6 +87,7 @@ public:
 
     const vector<int>& getApplicableProducts() const { return applicableProductIds; }
 };
+
 class Customer {
 private:
     string username;
@@ -149,6 +153,7 @@ public:
     void clearCart() { items.clear(); }
 
 };
+
 enum OrderStatus { Pending, Processing, Completed, Canceled }; 
 
 class Order {
@@ -216,6 +221,7 @@ void saveOrdersToFile(const vector<Order>& orders, const string& filename) {
     }
     outFile.close();
 }
+
 Product findProductById(int productId, const vector<Product>& products) {
     for (const auto& product : products) {
         if (product.getId() == productId) {
@@ -224,6 +230,7 @@ Product findProductById(int productId, const vector<Product>& products) {
     }
     throw runtime_error("Product ID not found");
 }
+
 vector<Order> loadOrdersFromFile(const string& filename, const vector<Product>& products) {
     vector<Order> orders;
     ifstream inFile(filename);
@@ -286,8 +293,6 @@ vector<Order> loadOrdersFromFile(const string& filename, const vector<Product>& 
     inFile.close();
     return orders;
 }
-
-
 
 Order* findOrderById(int orderId, vector<Order>& orders) {
     for (auto& order : orders) {
@@ -399,6 +404,7 @@ unordered_map<string, string> loadAdminCredentials(const string& filename) {
     inFile.close();
     return credentials;
 }
+
 void savePromotionsToFile(const vector<Promotion>& promotions, const string& filename) {
     ofstream outFile(filename);
     for (const auto& promo : promotions) {
@@ -445,6 +451,7 @@ vector<Promotion> loadPromotionsFromFile(const string& filename) {
     inFile.close();
     return promotions;
 }
+
 void saveProductsToFile(const vector<Product>& products, const string& filename) {
     ofstream outFile(filename);
     for (const auto& product : products) {
@@ -463,6 +470,7 @@ void saveReviewsToFile(const vector<Product>& products, const string& filename) 
     }
     outFile.close();
 }
+
 vector<Product> loadProductsFromFile(const string& filename) {
     vector<Product> products;
     ifstream inFile(filename);
@@ -511,13 +519,17 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
             system("cls");
             cout << "\n--- Admin Menu ---\n";
             cout << "1. Add Product\n2. Edit Product\n3. Delete Product\n4. View Products\n5. Add Promotion\n";
-            cout << "6. View Promotions\n7. View Users\n8. Edit Users\n9. Delete Users\n";
-            cout<<"10. View All Orders\n11.Update Order Status\n12.Exit\n";
+            cout << "6. View Promotions\n7. Edit Promotions\n8. Delete Promotions\n9. View Users\n10. Edit Users\n11. Delete Users\n";
+            cout<<"12. View All Orders\n13.Update Order Status\n14.Exit\n";
             cout << "Enter your choice: ";
             cin >> choice;
             system("cls");
             switch (choice) {
-                case 1: { 
+                case 1: {
+                    cout << "--- Current Products ---\n";
+                    for (const auto& product : products) {
+                        product.display();
+                    } 
                     cout << "--- Add Product ---\n";
                     int id, stock;
                     double price;
@@ -537,7 +549,11 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
                     system("pause"); 
                     break;
                 }
-                case 2: { 
+                case 2: {
+                    cout << "--- Current Products ---\n";
+                    for (const auto& product : products) {
+                        product.display();
+                        } 
                     cout << "--- Edit Product ---\n";
                     int id;
                     cout << "Enter Product ID to Edit: ";
@@ -563,7 +579,11 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
                     system("pause");
                     break;
                 }
-                case 3: { 
+                case 3: {
+                    cout << "--- Current Products ---\n";
+                    for (const auto& product : products) {
+                        product.display();
+                        } 
                     cout << "--- Delete Product ---\n";
                     int id;
                     cout << "Enter Product ID to Delete: ";
@@ -585,28 +605,122 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
                     system("pause");
                     break;
                 }
-                case 5: { 
-                    cout << "--- Add Promotion ---\n";
-                    int promoId;
-                    string description;
-                    double discount;
-                    int productId;
-                    cout << "Enter Promotion ID: ";
-                    cin >> promoId;
-                    cout << "Enter Description: ";
-                    cin.ignore();
-                    getline(cin, description);
-                    cout << "Enter Discount Percentage: ";
-                    cin >> discount;
-                    cout << "Enter Product ID to Apply Promotion: ";
-                    cin >> productId;
-                    promotions.emplace_back(promoId, description, discount, vector<int>{productId});
-                    savePromotionsToFile(promotions, "admin1.txt");
-                    cout << "Promotion added successfully.\n";
-                    system("pause");
-                    break;
-                }
-                case 6: { 
+                case 5: { // Thêm mã giảm giá
+                cout << "--- Current Products ---\n";
+    for (const auto& product : products) {
+        cout << "ID: " << product.getId() 
+             << " | Name: " << product.getName() 
+             << " | Price: " << product.getPrice() 
+             << " | Stock: " << product.getStock() << "\n";
+    }
+    cout << "--- Current Promotions ---\n";
+    for (const auto& promo : promotions) {
+        cout << "Promotion ID: " << promo.getId() << " | Description: " << promo.getDescription()
+             << " | Discount: " << promo.getDiscount() << "%\n";
+    }
+    cout << "--- Add Promotion ---\n";
+    int promoId;
+    string description;
+    double discount;
+    int productId;
+    cout << "Enter Promotion ID: ";
+    cin >> promoId;
+    cout << "Enter Description: ";
+    cin.ignore();
+    getline(cin, description);
+    cout << "Enter Discount Percentage: ";
+    cin >> discount;
+    cout << "Enter Product ID to Apply Promotion: ";
+    cin >> productId;
+    bool isValidProduct = false;
+    for (const auto& product : products) {
+        if (product.getId() == productId) {
+            isValidProduct = true;
+            break;
+        }
+    }
+
+    if (!isValidProduct) {
+        cout << "Product ID not found! Please check the Product ID and try again.\n";
+        system("pause");
+        break;
+    }
+    promotions.emplace_back(promoId, description, discount, vector<int>{productId});
+    savePromotionsToFile(promotions, "admin1.txt");
+    cout << "Promotion added successfully.\n";
+    system("pause");
+    break;
+}
+case 6: { // Sửa mã giảm giá
+cout << "--- Current Products ---\n";
+    for (const auto& product : products) {
+        cout << "ID: " << product.getId() 
+             << " | Name: " << product.getName() 
+             << " | Price: " << product.getPrice() 
+             << " | Stock: " << product.getStock() << "\n";
+    }
+    cout << "--- Current Promotions ---\n";
+    for (const auto& promo : promotions) {
+        cout << "Promotion ID: " << promo.getId() << " | Description: " << promo.getDescription()
+             << " | Discount: " << promo.getDiscount() << "%\n";
+    }
+    cout << "--- Edit Promotion ---\n";
+    int promoId;
+    cout << "Enter Promotion ID to Edit: ";
+    cin >> promoId;
+    bool found = false;
+    for (auto& promo : promotions) {
+        if (promo.getId() == promoId) {
+            string description;
+            double discount;
+            cout << "Enter New Description: ";
+            cin.ignore();
+            getline(cin, description);
+            cout << "Enter New Discount Percentage: ";
+            cin >> discount;
+            promo = Promotion(promoId, description, discount, promo.getApplicableProducts());
+            savePromotionsToFile(promotions, "admin1.txt");
+            cout << "Promotion updated successfully.\n";
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        cout << "Promotion ID not found.\n";
+    }
+    system("pause");
+    break;
+}
+
+case 7: { // Xóa mã giảm giá
+    cout << "--- Current Promotions ---\n";
+    for (const auto& promo : promotions) {
+        cout << "Promotion ID: " << promo.getId() << " | Description: " << promo.getDescription()
+             << " | Discount: " << promo.getDiscount() << "%\n";
+    }
+    cout << "--- Delete Promotion ---\n";
+    int promoId;
+    cout << "Enter Promotion ID to Delete: ";
+    cin >> promoId;
+    auto it = remove_if(promotions.begin(), promotions.end(), [promoId](const Promotion& p) {
+        return p.getId() == promoId;
+    });
+    if (it != promotions.end()) {
+        promotions.erase(it, promotions.end());
+        savePromotionsToFile(promotions, "admin1.txt");
+        cout << "Promotion deleted successfully.\n";
+    } else {
+        cout << "Promotion ID not found.\n";
+    }
+    system("pause");
+    break;
+}
+                case 8: {
+                    // cout << "--- Current Promotions ---\n";
+                    // for (const auto& promo : promotions) {
+                    //     cout << "Promotion ID: " << promo.getId() << " | Description: " << promo.getDescription()
+                    //     << " | Discount: " << promo.getDiscount() << "%\n";
+                    // } 
                     cout << "--- View Promotions ---\n";
                     promotions = loadPromotionsFromFile("admin1.txt");
                     for (const auto& promo : promotions) {
@@ -616,7 +730,7 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
                     system("pause");
                     break;
                 }
-                case 7: { 
+                case 9: { 
                     cout << "--- View Users ---\n";
                     for (const auto& user : users) {
                         cout << "Username: " << user.username << "\n";
@@ -624,7 +738,11 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
                     system("pause");
                     break;
                 }
-                case 8: { 
+                case 10: {
+                    cout << "--- Current Users ---\n";
+                    for (const auto& user : users) {
+                        cout << "Username: " << user.username << "\n";
+                        } 
                     cout << "--- Edit Users ---\n";
                     string editUsername;
                     cout << "Enter the username to edit: ";
@@ -643,7 +761,11 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
                     system("pause");
                     break;
                 }
-                case 9: { 
+                case 11: {
+                    cout << "--- Current Users ---\n";
+                    for (const auto& user : users) {     
+                        cout << "Username: " << user.username << "\n";
+                        } 
                     cout << "--- Delete Users ---\n";
                     string deleteUsername;
                     cout << "Enter the username to delete: ";
@@ -661,7 +783,7 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
                     system("pause");
                     break;
                 }
-                case 10: {
+                case 12: {
     cout << "--- All Orders ---\n";
     cout << "Number of orders: " << orders.size() << "\n"; // Debug số lượng đơn hàng
     for (const auto& order : orders) {
@@ -670,7 +792,12 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
     system("pause"); // Dừng màn hình để xem kết quả
     break;
 }
-                case 11: {
+                case 13: {
+                    cout << "--- All Orders ---\n";
+    for (const auto& order : orders) {
+        order.viewOrder();
+    }
+        cout << "--- Update Order Status ---\n";
                     int orderId;
             cout << "Enter Order ID to update: ";
             cin >> orderId;
@@ -688,7 +815,7 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
             }
             break;
                 }
-                case 12: {
+                case 14: {
                     cout << "Exiting Admin Menu...\n";
                     break;
                 }
@@ -698,13 +825,13 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
                     break;
                 }
             }
-        } while (choice != 12);
+        } while (choice != 14);
     } else {
         cout << "Invalid admin credentials!\n";
     }
 };
 
-void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vector<Order>& orders) {
+void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vector<Order>& orders,int &nextOrderId) {
     string username;
     cout << "Enter Username: ";
     cin >> username;
@@ -752,7 +879,8 @@ void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vect
                 system("pause");
                 break;
             }
-            case 3: {
+            case 3: {cout << "--- Current Cart Items ---\n";
+    cart.viewCart(); // Hiển thị danh sách sản phẩm trong giỏ hàng
                 cout << "--- Remove from Cart ---\n";
                 int id;
                 cout << "Enter Product ID to remove: ";
@@ -768,7 +896,8 @@ void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vect
                 system("pause");
                 break;
             }
-            case 5: { 
+            case 5: {  cout << "--- Current Cart Items ---\n";
+    cart.viewCart(); // Hiển thị danh sách sản phẩm trong giỏ hàng
     cout << "--- Checkout ---\n";
     double total = cart.calculateTotal(promotions);
     cout << "\nTotal Amount: " << total;
@@ -784,8 +913,9 @@ void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vect
     char confirm;
     cin >> confirm;
     if (confirm == 'y' || confirm == 'Y') {
-        static int orderId = 1; 
-        orders.emplace_back(orderId++, username, cart.getItems(), total, phone, address);
+                orders.emplace_back(nextOrderId++, username, cart.getItems(), total, phone, address);
+        // static int orderId = 1; 
+        // orders.emplace_back(orderId++, username, cart.getItems(), total, phone, address);
         for (const auto& item : cart.getItems()) {
             for (auto& product : products) {
                 if (product.getId() == item.first.getId()) {
@@ -798,11 +928,14 @@ void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vect
                     product.setStock(newStock);
                 }
             }
-        }
+        } 
+        // orders.emplace_back(nextOrderId++, username, cart.getItems(), total, phone, address);
         saveProductsToFile(products, "admin.txt");
         saveOrdersToFile(orders, "orders.txt");
         cart.clearCart();
         cout << "Checkout successful!\n";
+    }else {
+        cout << "Checkout canceled.\n";
     }
     system("pause");
     break;
@@ -816,24 +949,57 @@ void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vect
                 system("pause");
                 break;
             }
-            case 7: { 
-                cout << "--- Leave a Review ---\n";
-                int id, rating;
-                cout << "Enter Product ID to review: ";
-                cin >> id;
-                cout << "Enter Rating (1-5): ";
-                cin >> rating;
-                for (auto& product : products) {
-                    if (product.getId() == id) {
-                        product.addReview(username, rating);
-                        saveReviewsToFile(products, "review.txt");
-                        cout << "Review added successfully!\n";
-                        break;
-                    }
-                }
-                system("pause");
-                break;
-            }
+            case 7: { // Đánh giá sản phẩm
+    cout << "--- Available Products ---\n";
+    for (const auto& product : products) {
+        cout << "Product ID: " << product.getId()
+             << " | Name: " << product.getName()
+             << " | Price: " << product.getPrice()
+             << " | Stock: " << product.getStock() << "\n";
+    }
+
+    cout << "--- Leave a Review ---\n";
+    int id, rating;
+    cout << "Enter Product ID to Review: ";
+    cin >> id;
+
+    // Kiểm tra sản phẩm có tồn tại trong danh sách sản phẩm
+    bool isValidProduct = false;
+    for (const auto& product : products) {
+        if (product.getId() == id) {
+            isValidProduct = true;
+            break;
+        }
+    }
+
+    if (!isValidProduct) {
+        cout << "The product does not exist in the store.\n";
+        system("pause");
+        break;
+    }
+
+    cout << "Enter Rating (1-5): ";
+    cin >> rating;
+
+    bool found = false;
+    for (auto& product : products) {
+        if (product.getId() == id) {
+            product.addReview(username, rating); // Thêm đánh giá mới
+            saveReviewsToFile(products, "review.txt");
+            cout << "Review added successfully!\n";
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Product not found.\n";
+    }
+
+    system("pause");
+    break;
+}
+
             case 8: {
                 cout << "Exiting Customer Menu...\n";
                 break;
@@ -846,12 +1012,19 @@ void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vect
         }
     } while (choice != 8);
 }
-
+int generateNewOrderId(const vector<Order>& orders) {
+    int maxId = 0;
+    for (const auto& order : orders) {
+        maxId = max(maxId, order.getId());
+    }
+    return maxId + 1;
+}
 int main() {
     vector<User> users = loadUsersFromFile("login.txt");
     vector<Product> products = loadProductsFromFile("admin.txt");
     vector<Promotion> promotions; 
-vector<Order> orders = loadOrdersFromFile("orders.txt", products);
+    vector<Order> orders = loadOrdersFromFile("orders.txt", products);
+    int nextOrderId = generateNewOrderId(orders);
     string loggedInUser;    
     
     int userType;
@@ -859,20 +1032,17 @@ vector<Order> orders = loadOrdersFromFile("orders.txt", products);
         cout << "\n--- Online Store Menu ---\n";
         cout << "1. Manager\n2. Customer\n3. Exit\n";
         cout << "Enter your choice: ";
-        cin >> userType;
-
+        cin >> userType;       
         if (userType == 1) {
-if (userType == 1) {
-    
-managerMenu(products, promotions, users, "login.txt", orders);
-        saveOrdersToFile(orders, "orders.txt");
-}
-        } else if (userType == 2) {
+            managerMenu(products, promotions, users, "login.txt", orders);
+            saveOrdersToFile(orders, "orders.txt");
+            }
+        else if (userType == 2) {
             if (!login(users, "login.txt", loggedInUser)) {
                 cout << "Exiting program.\n";
             return 0;
           }
-            customerMenu(products, promotions, orders);
+            customerMenu(products, promotions, orders,nextOrderId);
         }
     } while (userType != 3);
 
