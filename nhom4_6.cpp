@@ -142,7 +142,8 @@ public:
     void viewCart() const {
         cout << "\n--- Cart ---\n";
         for (const auto& item : items) {
-            cout << "Product: " << item.first.getName() << " | Quantity: " << item.second
+            cout << "Product ID: " << item.first.getId()
+                 << " | Product: " << item.first.getName() << " | Quantity: " << item.second
                  << " | Price: " << item.first.getPrice() << "\n";
         }
     }
@@ -229,7 +230,7 @@ Product findProductById(int productId, const vector<Product>& products) {
         }
     }
     throw runtime_error("Product ID not found");
-}
+};
 
 vector<Order> loadOrdersFromFile(const string& filename, const vector<Product>& products) {
     vector<Order> orders;
@@ -292,7 +293,7 @@ vector<Order> loadOrdersFromFile(const string& filename, const vector<Product>& 
     }
     inFile.close();
     return orders;
-}
+};
 
 Order* findOrderById(int orderId, vector<Order>& orders) {
     for (auto& order : orders) {
@@ -301,7 +302,7 @@ Order* findOrderById(int orderId, vector<Order>& orders) {
         }
     }
     return nullptr;
-}
+};
 
 struct User {
     string username;
@@ -365,7 +366,7 @@ bool login(vector<User>& users, const string& filename, string& loggedInUser) {
             system("pause");
         }
     } while (true); 
-}
+};
 
 vector<User> loadUsersFromFile(const string& filename) {
     vector<User> users;
@@ -381,7 +382,7 @@ vector<User> loadUsersFromFile(const string& filename) {
     }
     inFile.close();
     return users;
-}
+};
 
 void saveUsersToFile(const vector<User>& users, const string& filename) {
     ofstream outFile(filename);
@@ -389,7 +390,7 @@ void saveUsersToFile(const vector<User>& users, const string& filename) {
         outFile << user.username << "," << user.password << "\n";
     }
     outFile.close();
-}
+};
 
 unordered_map<string, string> loadAdminCredentials(const string& filename) {
     unordered_map<string, string> credentials;
@@ -403,7 +404,7 @@ unordered_map<string, string> loadAdminCredentials(const string& filename) {
     }
     inFile.close();
     return credentials;
-}
+};
 
 void savePromotionsToFile(const vector<Promotion>& promotions, const string& filename) {
     ofstream outFile(filename);
@@ -415,7 +416,7 @@ void savePromotionsToFile(const vector<Promotion>& promotions, const string& fil
         outFile << "\n";
     }
     outFile.close();
-}
+};
 
 vector<Promotion> loadPromotionsFromFile(const string& filename) {
     vector<Promotion> promotions;
@@ -450,7 +451,7 @@ vector<Promotion> loadPromotionsFromFile(const string& filename) {
     }
     inFile.close();
     return promotions;
-}
+};
 
 void saveProductsToFile(const vector<Product>& products, const string& filename) {
     ofstream outFile(filename);
@@ -459,7 +460,7 @@ void saveProductsToFile(const vector<Product>& products, const string& filename)
                 << "," << product.getStock() << "\n";
     }
     outFile.close();
-}
+};
 
 void saveReviewsToFile(const vector<Product>& products, const string& filename) {
     ofstream outFile(filename, ios::app); // Open in append mode
@@ -469,7 +470,7 @@ void saveReviewsToFile(const vector<Product>& products, const string& filename) 
         }
     }
     outFile.close();
-}
+};
 
 vector<Product> loadProductsFromFile(const string& filename) {
     vector<Product> products;
@@ -500,7 +501,7 @@ vector<Product> loadProductsFromFile(const string& filename) {
     }
     inFile.close();
     return products;
-}
+};
 
 void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vector<User>& users, const string& userFile,vector<Order>& orders) {
     const string adminUsername = "nguyentienson0512@gmail.com";
@@ -519,7 +520,7 @@ void managerMenu(vector<Product>& products, vector<Promotion>& promotions, vecto
             system("cls");
             cout << "\n--- Admin Menu ---\n";
             cout << "1. Add Product\n2. Edit Product\n3. Delete Product\n4. View Products\n5. Add Promotion\n";
-            cout << "6. View Promotions\n7. Edit Promotions\n8. Delete Promotions\n9. View Users\n10. Edit Users\n11. Delete Users\n";
+            cout << "6. Edit Promotions\n7. Delete Promotions\n8. view Promotions\n9. View Users\n10. Edit Users\n11. Delete Users\n";
             cout<<"12. View All Orders\n13.Update Order Status\n14.Exit\n";
             cout << "Enter your choice: ";
             cin >> choice;
@@ -880,7 +881,7 @@ void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vect
                 break;
             }
             case 3: {cout << "--- Current Cart Items ---\n";
-    cart.viewCart(); // Hiển thị danh sách sản phẩm trong giỏ hàng
+            cart.viewCart(); 
                 cout << "--- Remove from Cart ---\n";
                 int id;
                 cout << "Enter Product ID to remove: ";
@@ -896,8 +897,9 @@ void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vect
                 system("pause");
                 break;
             }
-            case 5: {  cout << "--- Current Cart Items ---\n";
-    cart.viewCart(); // Hiển thị danh sách sản phẩm trong giỏ hàng
+            case 5: {  
+                cout << "--- Current Cart Items ---\n";
+    cart.viewCart(); 
     cout << "--- Checkout ---\n";
     double total = cart.calculateTotal(promotions);
     cout << "\nTotal Amount: " << total;
@@ -1011,14 +1013,14 @@ void customerMenu(vector<Product>& products, vector<Promotion>& promotions, vect
             }
         }
     } while (choice != 8);
-}
+};
 int generateNewOrderId(const vector<Order>& orders) {
     int maxId = 0;
     for (const auto& order : orders) {
         maxId = max(maxId, order.getId());
     }
     return maxId + 1;
-}
+};
 int main() {
     vector<User> users = loadUsersFromFile("login.txt");
     vector<Product> products = loadProductsFromFile("admin.txt");
